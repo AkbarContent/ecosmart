@@ -1,203 +1,743 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telkom EcoSmart - Dashboard</title>
-    <!-- Tailwind CSS via CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- Google Fonts & Lucide Icons (Opsional untuk mempercantik) -->
+    <title>EcoSmart - Dasbor Smart Office</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
     <style>
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+        /* Efek custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #020617;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3b82f6;
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-black via-slate-950 to-blue-950 text-white min-h-screen">
+<body class="bg-gradient-to-br from-black via-slate-950 to-blue-950 text-slate-100 min-h-screen font-sans flex flex-col justify-between selection:bg-blue-600 selection:text-white">
 
-    <!-- Navbar -->
-    <nav class="border-b border-slate-800 bg-black/40 backdrop-blur-md sticky top-0 z-50 px-6 py-4">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="w-3 h-8 bg-blue-600 rounded-full animate-pulse"></div>
-                <h1 class="text-xl font-bold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-200">
-                    TELKOM <span class="text-white font-medium">EcoSmart</span>
-                </h1>
+    <!-- Kontainer Utama -->
+    <div class="flex-grow">
+        <!-- HEADER / NAVBAR -->
+        <header class="border-b border-slate-900 bg-black/40 backdrop-blur-md sticky top-0 z-40 px-4 py-4 sm:px-8">
+            <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+                <!-- Logo & Brand -->
+                <div class="flex items-center gap-3">
+                    <div class="relative flex items-center justify-center">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-600 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/10">
+                            <i class="fa-solid fa-bolt text-white text-lg animate-pulse"></i>
+                        </div>
+                        <span class="absolute -top-1 -right-1 flex h-3 w-3">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                        </span>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-200 to-white">
+                            <span class="text-blue-500 font-medium">Eco</span>Smart
+                        </h1>
+                        <p class="text-xs text-slate-500 font-medium tracking-wide">SMART BUILDING MANAGEMENT</p>
+                    </div>
+                </div>
+
+                <!-- Live Status & Sim Kontrol -->
+                <div class="flex flex-wrap items-center gap-3 justify-center">
+                    <div class="bg-slate-900/80 border border-slate-800/80 rounded-xl px-3 py-1.5 text-xs flex items-center gap-2">
+                        <span class="relative flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                        </span>
+                        <span class="text-slate-400 font-medium">STO Area 1 • Lantai 2</span>
+                    </div>
+
+                    <!-- Tombol Simulasi Otomatis -->
+                    <button id="simBtn" onclick="toggleSimulation()" class="bg-gradient-to-r from-indigo-900 to-blue-900 hover:from-indigo-800 hover:to-blue-800 border border-indigo-700/50 text-xs text-indigo-200 font-semibold px-4 py-2 rounded-xl transition-all duration-300 flex items-center gap-2 cursor-pointer active:scale-95 shadow-lg shadow-indigo-950/50">
+                        <i id="simIcon" class="fa-solid fa-play animate-bounce"></i>
+                        <span id="simText">Mulai Simulasi Beban</span>
+                    </button>
+                </div>
             </div>
-            <div class="flex items-center gap-4 text-sm text-slate-400">
-                <span class="flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span> 
-                    Sistem Aktif (STO Area)
-                </span>
+        </header>
+
+        <!-- CONTAINER UTAMA -->
+        <main class="max-w-7xl mx-auto px-4 sm:px-8 py-8">
+
+            <!-- NOTIFIKASI LIVE / ALERTS -->
+            <div id="alertBox" class="hidden mb-6 bg-amber-950/30 border border-amber-500/30 text-amber-200 p-4 rounded-2xl flex items-start gap-3 backdrop-blur-md animate-fade-in">
+                <div class="p-2 bg-amber-500/20 text-amber-400 rounded-xl mt-0.5">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <div class="flex-grow text-sm">
+                    <p class="font-bold text-amber-300">Deteksi Pemborosan Energi</p>
+                    <p class="text-amber-400/80 mt-0.5" id="alertMessage">Ada ruangan kosong dengan status AC aktif.</p>
+                </div>
+                <button onclick="dismissAlert()" class="text-amber-400 hover:text-amber-200 transition-colors p-1 cursor-pointer">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- GRID BARIS 1: RINGKASAN METRIK & GRAFIK SIMULASI -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                
+                <!-- KARTU METRIK 1: TOTAL KONSUMSI -->
+                <div class="bg-gradient-to-br from-slate-900/80 to-slate-950/80 border border-slate-800/80 p-6 rounded-3xl relative overflow-hidden group">
+                    <div class="absolute -right-6 -bottom-6 text-blue-500/5 text-8xl transition-all duration-500 group-hover:scale-110">
+                        <i class="fa-solid fa-plug"></i>
+                    </div>
+                    <div class="flex justify-between items-start">
+                        <span class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Konsumsi Hari Ini</span>
+                        <span class="bg-blue-950 text-blue-400 text-[10px] px-2.5 py-1 rounded-full border border-blue-900/50 font-bold" id="savingPct">↑ 0% Hemat</span>
+                    </div>
+                    <div class="mt-4 flex items-baseline gap-2">
+                        <span id="totalKwh" class="text-4xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-200">324.5</span>
+                        <span class="text-slate-500 text-sm font-medium">kWh</span>
+                    </div>
+                    <div class="mt-4 flex items-center gap-2 text-xs text-emerald-400">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                        <span id="savingDiff">Estimasi target bulanan tercapai</span>
+                    </div>
+                </div>
+
+                <!-- KARTU METRIK 2: BEBAN AKTIF -->
+                <div class="bg-gradient-to-br from-slate-900/80 to-slate-950/80 border border-slate-800/80 p-6 rounded-3xl relative overflow-hidden group">
+                    <div class="absolute -right-6 -bottom-6 text-indigo-500/5 text-8xl transition-all duration-500 group-hover:scale-110">
+                        <i class="fa-solid fa-temperature-three-quarters"></i>
+                    </div>
+                    <div class="flex justify-between items-start">
+                        <span class="text-slate-400 text-xs font-semibold uppercase tracking-wider">AC Aktif Saat Ini</span>
+                        <span class="bg-indigo-950 text-indigo-400 text-[10px] px-2.5 py-1 rounded-full border border-indigo-900/50 font-bold" id="totalAcOn">3 Unit</span>
+                    </div>
+                    <div class="mt-4 flex items-baseline gap-2">
+                        <span id="currentTemp" class="text-4xl font-extrabold tracking-tight text-white">22.5</span>
+                        <span class="text-slate-500 text-sm font-medium">°C Rata-Rata</span>
+                    </div>
+                    <div class="mt-4 flex items-center gap-2 text-xs text-amber-400" id="acStatusIndicator">
+                        <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+                        <span id="acStatusText">Optimalkan AC ruangan rapat kosong!</span>
+                    </div>
+                </div>
+
+                <!-- KARTU METRIK 3: ESTIMASI BIAYA -->
+                <div class="bg-gradient-to-br from-slate-900/80 to-slate-950/80 border border-slate-800/80 p-6 rounded-3xl relative overflow-hidden group">
+                    <div class="absolute -right-6 -bottom-6 text-emerald-500/5 text-8xl transition-all duration-500 group-hover:scale-110">
+                        <i class="fa-solid fa-rupiah-sign"></i>
+                    </div>
+                    <div class="flex justify-between items-start">
+                        <span class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Estimasi Biaya Hari Ini</span>
+                        <span class="bg-emerald-950 text-emerald-400 text-[10px] px-2.5 py-1 rounded-full border border-emerald-900/50 font-bold">Tarif Bisnis</span>
+                    </div>
+                    <div class="mt-4 flex items-baseline gap-2">
+                        <span class="text-xl font-bold text-emerald-500">Rp</span>
+                        <span id="totalCost" class="text-3xl font-extrabold tracking-tight text-emerald-400">470.525</span>
+                    </div>
+                    <div class="mt-5 flex items-center gap-1.5 text-xs text-slate-400">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                        <span>Terhitung dari tarif Rp 1.450 / kWh</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- BARIS ACTION & TITLE -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                <div>
+                    <h2 class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                        <i class="fa-solid fa-door-open text-blue-500"></i>
+                        Status & Kontrol Ruangan Gedung
+                    </h2>
+                    <p class="text-slate-400 text-sm mt-0.5">Pantau, nyalakan, atau matikan perangkat pendingin udara dan pencahayaan secara interaktif.</p>
+                </div>
+
+                <!-- Tombol Aksi -->
+                <div class="flex flex-wrap gap-2 w-full md:w-auto">
+                    <button onclick="optimizeAll()" class="bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all duration-300 shadow-md shadow-emerald-950/40 flex items-center gap-2 cursor-pointer active:scale-95 w-full sm:w-auto justify-center">
+                        <i class="fa-solid fa-leaf"></i>
+                        Optimalkan Semua AC
+                    </button>
+                    <button onclick="openModal()" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all duration-300 flex items-center gap-2 cursor-pointer active:scale-95 w-full sm:w-auto justify-center">
+                        <i class="fa-solid fa-plus text-blue-500"></i>
+                        Tambah Ruangan Baru
+                    </button>
+                </div>
+            </div>
+
+            <!-- CONTAINER UTAMA KARTU RUANGAN -->
+            <div id="roomContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+                <!-- Data Ruangan akan di-render di sini menggunakan JavaScript -->
+            </div>
+
+            <!-- BOTTOM INFO PANEL: BAGAIMANA SOFTWARE INI BEKERJA -->
+            <section class="bg-slate-950/60 border border-slate-900 p-6 rounded-3xl mt-12">
+                <h3 class="font-bold text-lg text-white mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-circle-info text-blue-500"></i>
+                    Tentang Simulasi EcoSmart
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-slate-400">
+                    <div class="space-y-2">
+                        <div class="text-blue-400 font-bold flex items-center gap-2">
+                            <span class="w-5 h-5 rounded-full bg-blue-950 text-blue-400 flex items-center justify-center text-xs font-black">1</span>
+                            Monitoring Otomatis
+                        </div>
+                        <p class="text-xs leading-relaxed">Sistem memantau suhu internal dan keberadaan orang secara virtual. Jika suatu ruangan dideteksi kosong tetapi memiliki AC aktif, sistem akan memberikan indikator peringatan berwarna oranye.</p>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="text-indigo-400 font-bold flex items-center gap-2">
+                            <span class="w-5 h-5 rounded-full bg-indigo-950 text-indigo-400 flex items-center justify-center text-xs font-black">2</span>
+                            Interaksi Cepat (IoT Control)
+                        </div>
+                        <p class="text-xs leading-relaxed">Tombol kontrol pada setiap kartu merepresentasikan sakelar pintar (Smart Switch) untuk mematikan perangkat dari jarak jauh tanpa harus mendatangi ruangan secara langsung.</p>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="text-emerald-400 font-bold flex items-center gap-2">
+                            <span class="w-5 h-5 rounded-full bg-emerald-950 text-emerald-400 flex items-center justify-center text-xs font-black">3</span>
+                            Model Simulasi Beban
+                        </div>
+                        <p class="text-xs leading-relaxed">Klik tombol <span class="text-slate-200 font-semibold">"Mulai Simulasi Beban"</span> untuk mengaktifkan pemutakhiran data dinamis per 2 detik, menyimulasikan fluktuasi konsumsi listrik harian.</p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-slate-900 bg-black/60 py-6 px-4 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+            <p>© 2026 EcoSmart. Dirancang untuk efisiensi energi berkelanjutan.</p>
+            <div class="flex gap-4">
+                <a href="#" class="hover:text-blue-500 transition-colors">Panduan Sistem</a>
+                <span>•</span>
+                <a href="#" class="hover:text-blue-500 transition-colors">Kontak Fasilitas</a>
             </div>
         </div>
-    </nav>
+    </footer>
 
-    <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-6 py-8">
-        
-        <!-- Section: Ringkasan Energi (Top Stats) -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-            <!-- Stat 1 -->
-            <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-2xl backdrop-blur-sm">
-                <p class="text-slate-400 text-sm font-medium">Konsumsi Hari Ini</p>
-                <h3 class="text-3xl font-bold mt-2 text-blue-400">324.5 <span class="text-lg font-normal text-slate-400">kWh</span></h3>
-                <span class="text-xs text-emerald-400 mt-1 block">↓ 8% lebih hemat dari kemarin</span>
+    <!-- MODAL POPUP TAMBAH RUANGAN -->
+    <div id="addRoomModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-slate-900 border border-slate-800 p-6 rounded-3xl w-full max-w-md animate-scale-up">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-door-closed text-blue-500"></i>
+                    Tambah Ruangan Baru
+                </h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-white cursor-pointer transition-colors p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
             </div>
-            <!-- Stat 2 -->
-            <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-2xl backdrop-blur-sm">
-                <p class="text-slate-400 text-sm font-medium">Total AC Menyala</p>
-                <h3 class="text-3xl font-bold mt-2 text-white">4 <span class="text-lg font-normal text-slate-400">Unit</span></h3>
-                <span class="text-xs text-amber-400 mt-1 block">⚠️ 2 Ruangan kosong terdeteksi</span>
-            </div>
-            <!-- Stat 3 -->
-            <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-2xl backdrop-blur-sm">
-                <p class="text-slate-400 text-sm font-medium">Efisiensi Energi</p>
-                <h3 class="text-3xl font-bold mt-2 text-emerald-400">92%</h3>
-                <span class="text-xs text-slate-400 mt-1 block">Status: Sangat Optimal</span>
-            </div>
-        </div>
-
-        <!-- Section Title -->
-        <div class="flex justify-between items-center mb-6">
-            <div>
-                <h2 class="text-xl font-bold">Monitoring & Kontrol Ruangan</h2>
-                <p class="text-slate-400 text-sm">Gedung Sentral Telepon Otomat (STO) - Lantai 1</p>
-            </div>
-            <button class="bg-blue-600 hover:bg-blue-700 text-sm px-4 py-2 rounded-xl transition duration-200">
-                + Tambah Ruangan
-            </button>
-        </div>
-
-        <!-- Section: Grid Ruangan (Card List) -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             
-            <!-- Card 1: Ruang Server OLT -->
-            <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-5 hover:border-blue-500/50 transition-all duration-300 flex flex-col justify-between group">
+            <form id="addRoomForm" onsubmit="handleNewRoom(event)" class="space-y-4 text-sm">
                 <div>
-                    <div class="flex justify-between items-start mb-4">
-                        <span class="bg-blue-950 text-blue-400 text-xs px-2.5 py-1 rounded-full border border-blue-800/50 font-medium">Infrastruktur</span>
-                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]"></span>
+                    <label class="block text-slate-400 font-medium mb-1.5">Nama Ruangan</label>
+                    <input type="text" id="roomName" required placeholder="Contoh: Kamar Tidur Saya, Ruang Kerja" class="w-full bg-slate-950 border border-slate-800 focus:border-blue-500 focus:outline-none rounded-xl px-3.5 py-2.5 text-white transition-colors">
+                </div>
+                <div>
+                    <label class="block text-slate-400 font-medium mb-1.5">Kategori Fungsi</label>
+                    <select id="roomCategory" class="w-full bg-slate-950 border border-slate-800 focus:border-blue-500 focus:outline-none rounded-xl px-3.5 py-2.5 text-white transition-colors">
+                        <option value="Fasilitas">Fasilitas Pribadi / Kamar Saya</option>
+                        <option value="Infrastruktur">Infrastruktur (Server, OLT, Sentral)</option>
+                        <option value="Pelayanan">Layanan Publik (Plasa Telkom, Lobi)</option>
+                    </select>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-slate-400 font-medium mb-1.5">Suhu Ruangan (°C)</label>
+                        <input type="number" id="roomTemp" required min="16" max="30" value="24" class="w-full bg-slate-950 border border-slate-800 focus:border-blue-500 focus:outline-none rounded-xl px-3.5 py-2.5 text-white transition-colors">
                     </div>
-                    <h4 class="font-bold text-lg text-slate-100 group-hover:text-blue-400 transition-colors">Ruang Server OLT</h4>
-                    <p class="text-slate-500 text-xs mt-1">ID Perangkat: RM-001</p>
-                    
-                    <!-- Indikator Suhu & Perangkat -->
-                    <div class="mt-6 space-y-3">
-                        <div class="flex justify-between text-sm">
-                            <span class="text-slate-400">Suhu Ruangan:</span>
-                            <span class="font-bold text-emerald-400">21°C (Aman)</span>
-                        </div>
-                        <div class="flex justify-between text-sm">
-                            <span class="text-slate-400">Status Lampu:</span>
-                            <span class="font-medium text-slate-300">Mati</span>
-                        </div>
-                        <div class="flex justify-between text-sm">
-                            <span class="text-slate-400">Status AC:</span>
-                            <span class="font-medium text-blue-400">Menyala (2 Unit)</span>
-                        </div>
+                    <div>
+                        <label class="block text-slate-400 font-medium mb-1.5">Jumlah Unit AC</label>
+                        <input type="number" id="roomAcCount" required min="1" max="6" value="1" class="w-full bg-slate-950 border border-slate-800 focus:border-blue-500 focus:outline-none rounded-xl px-3.5 py-2.5 text-white transition-colors">
                     </div>
                 </div>
-                <button onclick="alert('Simulasi: AC Ruang Server OLT dinonaktifkan')" class="mt-6 w-full py-2 bg-slate-800 hover:bg-red-950/40 hover:text-red-400 border border-slate-700 hover:border-red-900 rounded-xl text-xs font-semibold tracking-wide transition-all duration-200 cursor-pointer">
-                    Matikan AC
-                </button>
-            </div>
-
-            <!-- Card 2: Ruang Rapat Digital -->
-            <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-5 hover:border-blue-500/50 transition-all duration-300 flex flex-col justify-between group">
-                <div>
-                    <div class="flex justify-between items-start mb-4">
-                        <span class="bg-indigo-950 text-indigo-400 text-xs px-2.5 py-1 rounded-full border border-indigo-800/50 font-medium">Fasilitas</span>
-                        <span class="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]"></span>
-                    </div>
-                    <h4 class="font-bold text-lg text-slate-100 group-hover:text-blue-400 transition-colors">Ruang Rapat Utama</h4>
-                    <p class="text-slate-500 text-xs mt-1">ID Perangkat: RM-002</p>
-                    
-                    <div class="mt-6 space-y-3">
-                        <div class="flex justify-between text-sm">
-                            <span class="text-slate-400">Suhu Ruangan:</span>
-                            <span class="font-bold text-amber-400">25°C (Kosong)</span>
-                        </div>
-                        <div class="flex justify-between text-sm">
-                            <span class="text-slate-400">Status Lampu:</span>
-                            <span class="font-medium text-amber-400">Menyala</span>
-                        </div>
-                        <div class="flex justify-between text-sm">
-                            <span class="text-slate-400">Status AC:</span>
-                            <span class="font-medium text-amber-400">Menyala (1 Unit)</span>
-                        </div>
-                    </div>
+                <div class="flex items-center gap-3 py-1">
+                    <input type="checkbox" id="roomIsPopulated" checked class="w-4 h-4 rounded text-blue-600 bg-slate-950 border-slate-800 focus:ring-blue-500 focus:ring-2">
+                    <label for="roomIsPopulated" class="text-slate-300 font-medium selection:bg-transparent">Ruangan Sedang Digunakan (Ada Orang)</label>
                 </div>
-                <button onclick="alert('Simulasi: AC Ruang Rapat Utama dinonaktifkan')" class="mt-6 w-full py-2 bg-slate-800 hover:bg-red-950/40 hover:text-red-400 border border-slate-700 hover:border-red-900 rounded-xl text-xs font-semibold tracking-wide transition-all duration-200 cursor-pointer">
-                    Matikan AC
-                </button>
-            </div>
-
-            <!-- Card 3: Area Kerja Kubikel -->
-            <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-5 hover:border-blue-500/50 transition-all duration-300 flex flex-col justify-between group">
-                <div>
-                    <div class="flex justify-between items-start mb-4">
-                        <span class="bg-indigo-950 text-indigo-400 text-xs px-2.5 py-1 rounded-full border border-indigo-800/50 font-medium">Fasilitas</span>
-                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]"></span>
-                    </div>
-                    <h4 class="font-bold text-lg text-slate-100 group-hover:text-blue-400 transition-colors">Workspace Lantai 1</h4>
-                    <p class="text-slate-500 text-xs mt-1">ID Perangkat: RM-003</p>
-                    
-                    <div class="mt-6 space-y-3">
-                        <div class="flex justify-between text-sm">
-                            <span class="text-slate-400">Suhu Ruangan:</span>
-                            <span class="font-bold text-emerald-400">24°C (Optimal)</span>
-                        </div>
-                        <div class="flex justify-between text-sm">
-                            <span class="text-slate-400">Status Lampu:</span>
-                            <span class="font-medium text-emerald-400">Menyala</span>
-                        </div>
-                        <div class="flex justify-between text-sm">
-                            <span class="text-slate-400">Status AC:</span>
-                            <span class="font-medium text-blue-400">Menyala (4 Unit)</span>
-                        </div>
-                    </div>
+                <div class="flex gap-3 pt-2">
+                    <button type="button" onclick="closeModal()" class="w-1/2 bg-slate-800 hover:bg-slate-700 text-slate-300 py-3 rounded-xl font-bold transition-all cursor-pointer">Batal</button>
+                    <button type="submit" class="w-1/2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white py-3 rounded-xl font-bold transition-all shadow-lg shadow-blue-950/40 cursor-pointer">Simpan</button>
                 </div>
-                <button onclick="alert('Simulasi: AC Workspace Lantai 1 dinonaktifkan')" class="mt-6 w-full py-2 bg-slate-800 hover:bg-red-950/40 hover:text-red-400 border border-slate-700 hover:border-red-900 rounded-xl text-xs font-semibold tracking-wide transition-all duration-200 cursor-pointer">
-                    Matikan AC
-                </button>
-            </div>
-
-            <!-- Card 4: Customer Service Area -->
-            <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-5 hover:border-blue-500/50 transition-all duration-300 flex flex-col justify-between group">
-                <div>
-                    <div class="flex justify-between items-start mb-4">
-                        <span class="bg-purple-950 text-purple-400 text-xs px-2.5 py-1 rounded-full border border-purple-800/50 font-medium">Pelayanan</span>
-                        <span class="w-2.5 h-2.5 rounded-full bg-slate-600"></span>
-                    </div>
-                    <h4 class="font-bold text-lg text-slate-100 group-hover:text-blue-400 transition-colors">Lobi Plasa Telkom</h4>
-                    <p class="text-slate-500 text-xs mt-1">ID Perangkat: RM-004</p>
-                    
-                    <div class="mt-6 space-y-3">
-                        <div class="flex justify-between text-sm">
-                            <span class="text-slate-400">Suhu Ruangan:</span>
-                            <span class="font-bold text-slate-400">-- °C (Off)</span>
-                        </div>
-                        <div class="flex justify-between text-sm">
-                            <span class="text-slate-400">Status Lampu:</span>
-                            <span class="font-medium text-slate-500">Mati</span>
-                        </div>
-                        <div class="flex justify-between text-sm">
-                            <span class="text-slate-400">Status AC:</span>
-                            <span class="font-medium text-slate-500">Mati</span>
-                        </div>
-                    </div>
-                </div>
-                <button disabled class="mt-6 w-full py-2 bg-slate-950 border border-slate-900 text-slate-600 rounded-xl text-xs font-semibold tracking-wide cursor-not-allowed">
-                    AC Sudah Mati
-                </button>
-            </div>
-
+            </form>
         </div>
-        
-    </main>
+    </div>
+
+    <!-- NOTIFIKASI SEMENTARA (TOAST) -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 border border-slate-800 p-4 rounded-2xl flex items-center gap-3 shadow-2xl shadow-black z-50 translate-y-24 opacity-0 transition-all duration-300 max-w-sm">
+        <div id="toastIcon" class="p-2 bg-emerald-500/20 text-emerald-400 rounded-xl">
+            <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <p id="toastText" class="text-sm font-medium text-slate-200">Aksi berhasil dijalankan.</p>
+    </div>
+
+    <!-- LOGIC SYSTEM & DATA -->
+    <script>
+        // Data ruangan bawaan / inisiasi awal (Kini menyertakan Kamar Utama Anda!)
+        let rooms = [
+            {
+                id: 'RM-MYROOM',
+                name: 'Kamar Tidur Saya 🛌',
+                category: 'Fasilitas',
+                temp: 24,
+                isPopulated: true,
+                lightsOn: true,
+                acCount: 1,
+                acOn: true
+            },
+            {
+                id: 'RM-001',
+                name: 'Ruang Server OLT',
+                category: 'Infrastruktur',
+                temp: 21,
+                isPopulated: true,
+                lightsOn: false,
+                acCount: 2,
+                acOn: true
+            },
+            {
+                id: 'RM-002',
+                name: 'Ruang Rapat Utama',
+                category: 'Fasilitas',
+                temp: 25,
+                isPopulated: false, // Kosong tetapi AC/Lampu menyala (pemicu alert)
+                lightsOn: true,
+                acCount: 1,
+                acOn: true
+            },
+            {
+                id: 'RM-003',
+                name: 'Workspace Lantai 2',
+                category: 'Fasilitas',
+                temp: 24,
+                isPopulated: true,
+                lightsOn: true,
+                acCount: 4,
+                acOn: true
+            }
+        ];
+
+        // Variabel Status Energi Global
+        let totalKwh = 324.5;
+        let isSimulationRunning = false;
+        let simulationInterval = null;
+
+        // Render semua kartu ruangan ke dalam container
+        function renderRooms() {
+            const container = document.getElementById('roomContainer');
+            container.innerHTML = '';
+
+            rooms.forEach(room => {
+                // Tentukan warna badge kategori
+                let catBadgeClass = '';
+                if(room.category === 'Infrastruktur') {
+                    catBadgeClass = 'bg-red-950 text-red-400 border-red-900/40';
+                } else if(room.category === 'Fasilitas') {
+                    catBadgeClass = 'bg-indigo-950 text-indigo-400 border-indigo-900/40';
+                } else {
+                    catBadgeClass = 'bg-purple-950 text-purple-400 border-purple-900/40';
+                }
+
+                // Cari apakah ada pelanggaran (ruangan kosong tapi AC/lampu menyala)
+                const isWasting = !room.isPopulated && (room.acOn || room.lightsOn);
+
+                // Indikator status warna
+                let statusColor = 'bg-slate-600'; // Mati
+                if (room.isPopulated && room.acOn) {
+                    statusColor = 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]'; // Beroperasi optimal
+                } else if (isWasting) {
+                    statusColor = 'bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]'; // Pemborosan
+                } else if (room.isPopulated && !room.acOn) {
+                    statusColor = 'bg-blue-400 shadow-[0_0_10px_rgba(96,165,250,0.5)]'; // Ada orang tapi AC mati
+                }
+
+                // Buat HTML Kartu
+                const card = document.createElement('div');
+                card.className = `bg-gradient-to-br from-slate-900/50 to-slate-950/80 border ${isWasting ? 'border-amber-500/30' : 'border-slate-800/80'} rounded-2xl p-5 hover:border-blue-500/50 hover:shadow-lg hover:shadow-blue-950/10 transition-all duration-300 flex flex-col justify-between group relative`;
+                
+                card.innerHTML = `
+                    <div>
+                        <!-- Header Kartu -->
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="${catBadgeClass} text-[10px] px-2.5 py-0.5 rounded-full border font-semibold">
+                                ${room.category}
+                            </span>
+                            <div class="flex items-center gap-2">
+                                ${isWasting ? '<i class="fa-solid fa-leaf text-amber-500 text-xs animate-bounce" title="Rekomendasi Hemat Energi"></i>' : ''}
+                                <span class="w-2.5 h-2.5 rounded-full ${statusColor}"></span>
+                            </div>
+                        </div>
+
+                        <!-- Info Judul -->
+                        <h4 class="font-bold text-lg text-slate-100 group-hover:text-blue-400 transition-colors truncate">
+                            ${room.name}
+                        </h4>
+                        
+                        <!-- Interaktif Keberadaan Orang -->
+                        <div class="flex justify-between items-center mt-2 bg-slate-950/40 px-2.5 py-1.5 rounded-lg border border-slate-900">
+                            <span class="text-xs ${room.isPopulated ? 'text-blue-400 font-medium' : 'text-slate-500'}">
+                                <i class="fa-solid ${room.isPopulated ? 'fa-users' : 'fa-user-slash'} mr-1"></i>
+                                ${room.isPopulated ? 'Ada Orang' : 'Kosong'}
+                            </span>
+                            <button onclick="toggleOccupancy('${room.id}')" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded-md transition-all active:scale-95 cursor-pointer font-bold">
+                                Ubah Status
+                            </button>
+                        </div>
+                        
+                        <!-- Metrik Spesifik Ruangan -->
+                        <div class="mt-4 space-y-3 bg-slate-950/30 p-3 rounded-xl border border-slate-900/50">
+                            <!-- Suhu Interaktif -->
+                            <div class="flex justify-between items-center text-xs">
+                                <span class="text-slate-400">Suhu AC:</span>
+                                <div class="flex items-center gap-2">
+                                    ${room.acOn ? `
+                                        <button onclick="adjustTemp('${room.id}', -1)" class="w-5 h-5 bg-slate-800 hover:bg-slate-700 rounded flex items-center justify-center text-white font-bold cursor-pointer transition-colors active:scale-90">-</button>
+                                        <span class="font-bold text-emerald-400 font-mono">${room.temp}°C</span>
+                                        <button onclick="adjustTemp('${room.id}', 1)" class="w-5 h-5 bg-slate-800 hover:bg-slate-700 rounded flex items-center justify-center text-white font-bold cursor-pointer transition-colors active:scale-90">+</button>
+                                    ` : `
+                                        <span class="text-slate-500 font-bold">-- °C (Off)</span>
+                                    `}
+                                </div>
+                            </div>
+                            <!-- Sakelar Lampu -->
+                            <div class="flex justify-between text-xs items-center">
+                                <span class="text-slate-400">Sakelar Lampu:</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="font-medium ${room.lightsOn ? 'text-amber-400' : 'text-slate-500'}">
+                                        ${room.lightsOn ? 'Menyala' : 'Padam'}
+                                    </span>
+                                    <button onclick="toggleLight('${room.id}')" class="text-xs text-blue-500 hover:text-blue-400 font-semibold cursor-pointer">
+                                        <i class="fa-solid fa-power-off"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Jumlah AC -->
+                            <div class="flex justify-between text-xs">
+                                <span class="text-slate-400">Beban AC:</span>
+                                <span class="font-semibold ${room.acOn ? 'text-blue-400' : 'text-slate-500'}">
+                                    ${room.acOn ? `On (${room.acCount} Unit)` : 'Off'}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tombol Aksi Kontrol -->
+                    <div class="mt-6 flex gap-2">
+                        <button onclick="toggleAc('${room.id}')" class="w-full py-2 bg-slate-900 hover:bg-slate-800 text-white border border-slate-800 hover:border-slate-700 rounded-xl text-xs font-bold tracking-wide transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5 active:scale-95">
+                            <i class="fa-solid ${room.acOn ? 'fa-snowflake text-blue-400' : 'fa-snowflake text-slate-500'}" style="animation-duration: 4s;"></i>
+                            ${room.acOn ? 'Matikan AC' : 'Nyalakan AC'}
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            // Jalankan pembaruan dashboard statistik keseluruhan
+            updateGlobalStats();
+        }
+
+        // Cari total unit AC yang menyala & suhu rata-rata
+        function updateGlobalStats() {
+            let acCount = 0;
+            let tempSum = 0;
+            let tempCount = 0;
+            let hasWastingAlert = false;
+            let offendingRoomName = "";
+
+            rooms.forEach(room => {
+                if (room.acOn) {
+                    acCount += room.acCount;
+                    if(room.temp > 0) {
+                        tempSum += room.temp;
+                        tempCount++;
+                    }
+                }
+                
+                // Cek pemborosan energi (kosong tetapi AC/Lampu nyala)
+                if (!room.isPopulated && (room.acOn || room.lightsOn)) {
+                    hasWastingAlert = true;
+                    offendingRoomName = room.name;
+                }
+            });
+
+            // Update UI Beban AC Aktif
+            document.getElementById('totalAcOn').innerText = `${acCount} Unit`;
+            
+            // Rata-rata suhu ruangan
+            const avgTemp = tempCount > 0 ? (tempSum / tempCount).toFixed(1) : 'Off';
+            document.getElementById('currentTemp').innerText = avgTemp;
+
+            // Hitung Biaya & kWh berdasarkan estimasi
+            document.getElementById('totalKwh').innerText = totalKwh.toFixed(1);
+            
+            // Tarif simulasi: Rp 1.450 per kWh
+            const cost = totalKwh * 1450;
+            document.getElementById('totalCost').innerText = Math.round(cost).toLocaleString('id-ID');
+
+            // Hitung persentase efisiensi / penghematan dibanding tolok ukur standar (350 kWh)
+            const benchmark = 350;
+            if(totalKwh < benchmark) {
+                const diffPct = (((benchmark - totalKwh) / benchmark) * 100).toFixed(0);
+                document.getElementById('savingPct').innerText = `↓ ${diffPct}% Lebih Hemat`;
+                document.getElementById('savingDiff').innerText = `Hemat ${ (benchmark - totalKwh).toFixed(1) } kWh dari baseline standar`;
+            } else {
+                document.getElementById('savingPct').innerText = `↑ Beban Tinggi`;
+                document.getElementById('savingDiff').innerText = `Konsumsi di atas ambang batas dasar!`;
+            }
+
+            // Tampilkan Notifikasi / Peringatan Hemat Energi jika ada masalah
+            const alertBox = document.getElementById('alertBox');
+            if (hasWastingAlert) {
+                document.getElementById('alertMessage').innerText = `Mendeteksi pemborosan! Perangkat aktif di "${offendingRoomName}" padahal ruangan sedang kosong. Silakan matikan untuk hemat energi.`;
+                alertBox.classList.remove('hidden');
+                
+                // Beri indikator bahaya di statistik AC
+                document.getElementById('acStatusIndicator').className = "mt-4 flex items-center gap-2 text-xs text-amber-400";
+                document.getElementById('acStatusText').innerText = "Rekomendasi optimasi terdeteksi!";
+            } else {
+                alertBox.classList.add('hidden');
+                document.getElementById('acStatusIndicator').className = "mt-4 flex items-center gap-2 text-xs text-emerald-400";
+                document.getElementById('acStatusText').innerText = "Seluruh ruangan beroperasi efisien.";
+            }
+        }
+
+        // Penyesuaian Suhu AC (+/-) secara dinamis
+        function adjustTemp(roomId, val) {
+            const roomIndex = rooms.findIndex(r => r.id === roomId);
+            if (roomIndex !== -1) {
+                const r = rooms[roomIndex];
+                const newTemp = r.temp + val;
+                
+                // Batasan suhu AC wajar (16°C - 30°C)
+                if (newTemp >= 16 && newTemp <= 30) {
+                    r.temp = newTemp;
+                    renderRooms();
+                    showToast(`Suhu AC di ${r.name} disesuaikan menjadi ${r.temp}°C.`, 'success');
+                }
+            }
+        }
+
+        // Sakelar Keberadaan Orang
+        function toggleOccupancy(roomId) {
+            const roomIndex = rooms.findIndex(r => r.id === roomId);
+            if (roomIndex !== -1) {
+                const r = rooms[roomIndex];
+                r.isPopulated = !r.isPopulated;
+                renderRooms();
+                showToast(`Status kehadiran di ${r.name} diubah menjadi: ${r.isPopulated ? 'Ada Orang' : 'Kosong'}.`, 'success');
+            }
+        }
+
+        // Sakelar AC per Ruangan
+        function toggleAc(roomId) {
+            const roomIndex = rooms.findIndex(r => r.id === roomId);
+            if (roomIndex !== -1) {
+                const r = rooms[roomIndex];
+                r.acOn = !r.acOn;
+                
+                // Jika AC menyala tapi sebelumnya suhunya mati/reset
+                if (r.acOn && r.temp === 0) {
+                    r.temp = 24; 
+                }
+
+                renderRooms();
+                showToast(`Status AC di ${r.name} diubah menjadi ${r.acOn ? 'MENYALA' : 'MATI'}.`, r.acOn ? 'success' : 'info');
+            }
+        }
+
+        // Sakelar Lampu per Ruangan
+        function toggleLight(roomId) {
+            const roomIndex = rooms.findIndex(r => r.id === roomId);
+            if (roomIndex !== -1) {
+                const r = rooms[roomIndex];
+                r.lightsOn = !r.lightsOn;
+                renderRooms();
+                showToast(`Lampu di ${r.name} diubah menjadi ${r.lightsOn ? 'MENYALA' : 'MATI'}.`, r.lightsOn ? 'success' : 'info');
+            }
+        }
+
+        // Optimalkan Semua AC (Matikan AC di ruangan kosong, atau atur suhu optimal 24 derajat)
+        function optimizeAll() {
+            let countOptimized = 0;
+            rooms.forEach(r => {
+                // Skenario 1: Ruang kosong, matikan AC
+                if(!r.isPopulated && r.acOn) {
+                    r.acOn = false;
+                    countOptimized++;
+                }
+                // Skenario 2: Ruangan ada orang tapi suhu terlalu dingin (< 22°C), atur ke suhu hemat 24°C
+                else if (r.isPopulated && r.acOn && r.temp < 22) {
+                    r.temp = 24;
+                    countOptimized++;
+                }
+            });
+
+            if(countOptimized > 0) {
+                renderRooms();
+                showToast(`${countOptimized} penyesuaian otomatis berhasil diterapkan untuk optimasi energi!`, 'success');
+            } else {
+                showToast("Semua sistem sudah berjalan secara optimal dan efisien.", "success");
+            }
+        }
+
+        // Pengendali Simulasi Beban Waktu Nyata
+        function toggleSimulation() {
+            const btn = document.getElementById('simBtn');
+            const icon = document.getElementById('simIcon');
+            const text = document.getElementById('simText');
+
+            if (isSimulationRunning) {
+                // Matikan Simulasi
+                isSimulationRunning = false;
+                clearInterval(simulationInterval);
+                icon.className = "fa-solid fa-play animate-bounce";
+                text.innerText = "Mulai Simulasi Beban";
+                btn.className = "bg-gradient-to-r from-indigo-900 to-blue-900 hover:from-indigo-800 hover:to-blue-800 border border-indigo-700/50 text-xs text-indigo-200 font-semibold px-4 py-2 rounded-xl transition-all duration-300 flex items-center gap-2 cursor-pointer active:scale-95 shadow-lg shadow-indigo-950/50";
+                showToast("Simulasi konsumsi energi dihentikan.", "info");
+            } else {
+                // Aktifkan Simulasi
+                isSimulationRunning = true;
+                icon.className = "fa-solid fa-stop text-red-400";
+                text.innerText = "Hentikan Simulasi";
+                btn.className = "bg-gradient-to-r from-red-950/80 to-slate-900 border border-red-800/40 text-xs text-red-200 font-semibold px-4 py-2 rounded-xl transition-all duration-300 flex items-center gap-2 cursor-pointer active:scale-95 shadow-lg shadow-red-950/30";
+                showToast("Simulasi konsumsi berjalan secara real-time.", "success");
+
+                // Perbarui konsumsi energi kWh setiap 2 detik
+                simulationInterval = setInterval(() => {
+                    let addition = 0;
+                    rooms.forEach(room => {
+                        if (room.acOn) {
+                            // AC menyedot daya jauh lebih besar jika suhu diatur semakin rendah (dingin)
+                            // Jika di bawah 22°C, daya serap naik drastis (faktor efisiensi 0.45), jika 24°C-25°C sangat hemat (0.15)
+                            let efficiencyFactor = 0.15;
+                            if (room.temp < 20) {
+                                efficiencyFactor = 0.45;
+                            } else if (room.temp < 22) {
+                                efficiencyFactor = 0.30;
+                            } else if (room.temp >= 26) {
+                                efficiencyFactor = 0.08; // Suhu eco friendly
+                            }
+                            
+                            addition += (room.acCount * efficiencyFactor);
+                        }
+                        if (room.lightsOn) {
+                            addition += 0.02; // Beban lampu kecil
+                        }
+                    });
+
+                    // Tambahkan fluktuasi acak sedikit demi realisme
+                    addition += (Math.random() * 0.05);
+                    totalKwh += addition;
+                    
+                    // Update tampilan data
+                    updateGlobalStats();
+                }, 2000);
+            }
+        }
+
+        // Tampilkan Modul Input Ruangan Baru
+        function openModal() {
+            document.getElementById('addRoomModal').classList.remove('hidden');
+        }
+
+        // Tutup Modul Input Ruangan Baru
+        function closeModal() {
+            document.getElementById('addRoomModal').classList.add('hidden');
+            document.getElementById('addRoomForm').reset();
+        }
+
+        // Penanganan Input Form Ruangan Baru
+        function handleNewRoom(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('roomName').value;
+            const category = document.getElementById('roomCategory').value;
+            const temp = parseInt(document.getElementById('roomTemp').value);
+            const acCount = parseInt(document.getElementById('roomAcCount').value);
+            const isPopulated = document.getElementById('roomIsPopulated').checked;
+
+            const newId = `RM-00${rooms.length + 1}`;
+
+            // Buat entri data ruangan baru
+            rooms.push({
+                id: newId,
+                name: name,
+                category: category,
+                temp: temp,
+                isPopulated: isPopulated,
+                lightsOn: isPopulated, // Otomatis lampu nyala jika ada orang
+                acCount: acCount,
+                acOn: true
+            });
+
+            // Refresh tampilan
+            renderRooms();
+            closeModal();
+            showToast(`Ruangan baru "${name}" telah ditambahkan ke sistem pemantauan.`, 'success');
+        }
+
+        // Menghilangkan Alert Manual
+        function dismissAlert() {
+            document.getElementById('alertBox').classList.add('hidden');
+        }
+
+        // Menampilkan Toast Notifikasi (Bukan browser alert popup!)
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastText = document.getElementById('toastText');
+            const toastIcon = document.getElementById('toastIcon');
+
+            toastText.innerText = message;
+
+            if (type === 'success') {
+                toastIcon.className = "p-2 bg-emerald-500/20 text-emerald-400 rounded-xl";
+                toastIcon.innerHTML = `<i class="fa-solid fa-circle-check"></i>`;
+            } else {
+                toastIcon.className = "p-2 bg-blue-500/20 text-blue-400 rounded-xl";
+                toastIcon.innerHTML = `<i class="fa-solid fa-circle-info"></i>`;
+            }
+
+            // Animasi memunculkan toast
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            // Sembunyikan setelah 3 detik
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3000);
+        }
+
+        // Mulai render saat DOM siap
+        window.addEventListener('DOMContentLoaded', () => {
+            renderRooms();
+        });
+    </script>
 </body>
 </html>
