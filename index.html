@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telkom EcoSmart - Dashboard</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Google Fonts & Lucide Icons (Opsional untuk mempercantik) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-black via-slate-950 to-blue-950 text-white min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="border-b border-slate-800 bg-black/40 backdrop-blur-md sticky top-0 z-50 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-3 h-8 bg-blue-600 rounded-full animate-pulse"></div>
+                <h1 class="text-xl font-bold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-200">
+                    TELKOM <span class="text-white font-medium">EcoSmart</span>
+                </h1>
+            </div>
+            <div class="flex items-center gap-4 text-sm text-slate-400">
+                <span class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span> 
+                    Sistem Aktif (STO Area)
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-6 py-8">
+        
+        <!-- Section: Ringkasan Energi (Top Stats) -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            <!-- Stat 1 -->
+            <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-2xl backdrop-blur-sm">
+                <p class="text-slate-400 text-sm font-medium">Konsumsi Hari Ini</p>
+                <h3 class="text-3xl font-bold mt-2 text-blue-400">324.5 <span class="text-lg font-normal text-slate-400">kWh</span></h3>
+                <span class="text-xs text-emerald-400 mt-1 block">↓ 8% lebih hemat dari kemarin</span>
+            </div>
+            <!-- Stat 2 -->
+            <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-2xl backdrop-blur-sm">
+                <p class="text-slate-400 text-sm font-medium">Total AC Menyala</p>
+                <h3 class="text-3xl font-bold mt-2 text-white">4 <span class="text-lg font-normal text-slate-400">Unit</span></h3>
+                <span class="text-xs text-amber-400 mt-1 block">⚠️ 2 Ruangan kosong terdeteksi</span>
+            </div>
+            <!-- Stat 3 -->
+            <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-2xl backdrop-blur-sm">
+                <p class="text-slate-400 text-sm font-medium">Efisiensi Energi</p>
+                <h3 class="text-3xl font-bold mt-2 text-emerald-400">92%</h3>
+                <span class="text-xs text-slate-400 mt-1 block">Status: Sangat Optimal</span>
+            </div>
+        </div>
+
+        <!-- Section Title -->
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h2 class="text-xl font-bold">Monitoring & Kontrol Ruangan</h2>
+                <p class="text-slate-400 text-sm">Gedung Sentral Telepon Otomat (STO) - Lantai 1</p>
+            </div>
+            <button class="bg-blue-600 hover:bg-blue-700 text-sm px-4 py-2 rounded-xl transition duration-200">
+                + Tambah Ruangan
+            </button>
+        </div>
+
+        <!-- Section: Grid Ruangan (Card List) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            
+            <!-- Card 1: Ruang Server OLT -->
+            <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-5 hover:border-blue-500/50 transition-all duration-300 flex flex-col justify-between group">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="bg-blue-950 text-blue-400 text-xs px-2.5 py-1 rounded-full border border-blue-800/50 font-medium">Infrastruktur</span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]"></span>
+                    </div>
+                    <h4 class="font-bold text-lg text-slate-100 group-hover:text-blue-400 transition-colors">Ruang Server OLT</h4>
+                    <p class="text-slate-500 text-xs mt-1">ID Perangkat: RM-001</p>
+                    
+                    <!-- Indikator Suhu & Perangkat -->
+                    <div class="mt-6 space-y-3">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-400">Suhu Ruangan:</span>
+                            <span class="font-bold text-emerald-400">21°C (Aman)</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-400">Status Lampu:</span>
+                            <span class="font-medium text-slate-300">Mati</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-400">Status AC:</span>
+                            <span class="font-medium text-blue-400">Menyala (2 Unit)</span>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="alert('Simulasi: AC Ruang Server OLT dinonaktifkan')" class="mt-6 w-full py-2 bg-slate-800 hover:bg-red-950/40 hover:text-red-400 border border-slate-700 hover:border-red-900 rounded-xl text-xs font-semibold tracking-wide transition-all duration-200 cursor-pointer">
+                    Matikan AC
+                </button>
+            </div>
+
+            <!-- Card 2: Ruang Rapat Digital -->
+            <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-5 hover:border-blue-500/50 transition-all duration-300 flex flex-col justify-between group">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="bg-indigo-950 text-indigo-400 text-xs px-2.5 py-1 rounded-full border border-indigo-800/50 font-medium">Fasilitas</span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]"></span>
+                    </div>
+                    <h4 class="font-bold text-lg text-slate-100 group-hover:text-blue-400 transition-colors">Ruang Rapat Utama</h4>
+                    <p class="text-slate-500 text-xs mt-1">ID Perangkat: RM-002</p>
+                    
+                    <div class="mt-6 space-y-3">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-400">Suhu Ruangan:</span>
+                            <span class="font-bold text-amber-400">25°C (Kosong)</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-400">Status Lampu:</span>
+                            <span class="font-medium text-amber-400">Menyala</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-400">Status AC:</span>
+                            <span class="font-medium text-amber-400">Menyala (1 Unit)</span>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="alert('Simulasi: AC Ruang Rapat Utama dinonaktifkan')" class="mt-6 w-full py-2 bg-slate-800 hover:bg-red-950/40 hover:text-red-400 border border-slate-700 hover:border-red-900 rounded-xl text-xs font-semibold tracking-wide transition-all duration-200 cursor-pointer">
+                    Matikan AC
+                </button>
+            </div>
+
+            <!-- Card 3: Area Kerja Kubikel -->
+            <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-5 hover:border-blue-500/50 transition-all duration-300 flex flex-col justify-between group">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="bg-indigo-950 text-indigo-400 text-xs px-2.5 py-1 rounded-full border border-indigo-800/50 font-medium">Fasilitas</span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]"></span>
+                    </div>
+                    <h4 class="font-bold text-lg text-slate-100 group-hover:text-blue-400 transition-colors">Workspace Lantai 1</h4>
+                    <p class="text-slate-500 text-xs mt-1">ID Perangkat: RM-003</p>
+                    
+                    <div class="mt-6 space-y-3">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-400">Suhu Ruangan:</span>
+                            <span class="font-bold text-emerald-400">24°C (Optimal)</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-400">Status Lampu:</span>
+                            <span class="font-medium text-emerald-400">Menyala</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-400">Status AC:</span>
+                            <span class="font-medium text-blue-400">Menyala (4 Unit)</span>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="alert('Simulasi: AC Workspace Lantai 1 dinonaktifkan')" class="mt-6 w-full py-2 bg-slate-800 hover:bg-red-950/40 hover:text-red-400 border border-slate-700 hover:border-red-900 rounded-xl text-xs font-semibold tracking-wide transition-all duration-200 cursor-pointer">
+                    Matikan AC
+                </button>
+            </div>
+
+            <!-- Card 4: Customer Service Area -->
+            <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-5 hover:border-blue-500/50 transition-all duration-300 flex flex-col justify-between group">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="bg-purple-950 text-purple-400 text-xs px-2.5 py-1 rounded-full border border-purple-800/50 font-medium">Pelayanan</span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-slate-600"></span>
+                    </div>
+                    <h4 class="font-bold text-lg text-slate-100 group-hover:text-blue-400 transition-colors">Lobi Plasa Telkom</h4>
+                    <p class="text-slate-500 text-xs mt-1">ID Perangkat: RM-004</p>
+                    
+                    <div class="mt-6 space-y-3">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-400">Suhu Ruangan:</span>
+                            <span class="font-bold text-slate-400">-- °C (Off)</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-400">Status Lampu:</span>
+                            <span class="font-medium text-slate-500">Mati</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-400">Status AC:</span>
+                            <span class="font-medium text-slate-500">Mati</span>
+                        </div>
+                    </div>
+                </div>
+                <button disabled class="mt-6 w-full py-2 bg-slate-950 border border-slate-900 text-slate-600 rounded-xl text-xs font-semibold tracking-wide cursor-not-allowed">
+                    AC Sudah Mati
+                </button>
+            </div>
+
+        </div>
+        
+    </main>
+</body>
+</html>
